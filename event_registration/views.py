@@ -7,7 +7,21 @@ def registration_view(request):
     if request.method == 'POST':
         registration_form = RegistrationForm(request.POST)
         if registration_form.is_valid():
-            registration = registration_form.save()
+            event_id = request.POST.get('event')  # Get the selected event ID from the form data
+            event = Event.objects.get(pk=event_id)  # Get the event object
+            full_name = registration_form.cleaned_data['full_name']
+            email = registration_form.cleaned_data['email']
+            whatsapp_number = registration_form.cleaned_data['whatsapp_number']
+            # Check if it's a team event
+            if event.is_team_event:
+                team_members = []
+                for i in range(1, 6):  # Assuming maximum of 5 team members
+                    team_member_name = request.POST.get(f'team_member_{i}')
+                    if team_member_name:
+                        team_members.append(team_member_name)
+                registration = Registration.objects.create(event=event, full_name=full_name, email=email, whatsapp_number=whatsapp_number, team_members=team_members)
+            else:
+                registration = Registration.objects.create(event=event, full_name=full_name, email=email, whatsapp_number=whatsapp_number)
             return redirect('payment', registration_id=registration.pk)
     else:
         registration_form = RegistrationForm()
