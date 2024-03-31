@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS */
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Payment Form</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Scan the UPI QR Code to Pay</h4>
+                <!-- UPI QR code image -->
+                <img src="https://imgs.search.brave.com/0xWUGNcN1CXu5peWEtdzdx4SPQYMXc3W4EZn2wxWPKE/rs:fit:500:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi9kL2QwL1FS/X2NvZGVfZm9yX21v/YmlsZV9FbmdsaXNo/X1dpa2lwZWRpYS5z/dmcvNjQwcHgtUVJf/Y29kZV9mb3JfbW9i/aWxlX0VuZ2xpc2hf/V2lraXBlZGlhLnN2/Zy5wbmc" class="img-fluid" alt="UPI QR Code">
+            </div>
+            <div class="col-md-6">
+                <h4>Submit Payment</h4>
+                <form id="payment-form" method="post" action="{% url 'payment' registration_id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="transaction-id">Transaction ID:</label>
+                        <input type="text" class="form-control" id="transaction-id" name="transaction_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="screenshot">Payment Screenshot:</label>
+                        <input type="file" class="form-control-file" id="screenshot" name="screenshot" required>
+                    </div>
+                    <input type="hidden" name="registration_id" value="{{ registration_id }}">
+                    <button type="submit" class="btn btn-primary">Submit Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Added opacity to make background image more visible */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        #team-members {
+            display: none;
+        }
+        #entry-fee {
+            display: none;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Use an img tag to display the event logo -->
+    <img src="https://ticvolunteer.pythonanywhere.com/static/images/unnamed.jpg" alt="Event Logo" style="display: block; margin: auto; width: 200px;">
+
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Event Registration Form</h2>
+        <form id="registration-form" method="post" action="{% url 'registration' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="event">Select Event:</label>
+                <select class="form-control" id="event" name="event">
+                    <option value="1">Digital Poster Competition</option>
+                    <!-- Remaining options omitted for brevity -->
+                </select>
+            </div>
+            <!-- Remaining form fields omitted for brevity -->
+            <button type="submit" class="btn btn-primary">Next</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // JavaScript to toggle display of team member fields for team events and display entry fee
+        $('#event').change(function() {
+            var isTeamEvent = $('#event').val() == '3' || $('#event').val() == '4' || $('#event').val() == '5' || $('#event').val() == '6' || $('#event').val() == '8'; // Assuming events 3, 4, 5, 6, 8 are team events
+            if (isTeamEvent) {
+                $('#team-members').empty();
+                for (var i = 1; i <= 5; i++) {
+                    $('#team-members').append('<div class="form-group"><label for="team-member-' + i + '">Team Member ' + i + ' Name:</label><input type="text" class="form-control" id="team-member-' + i + '" name="team_member_' + i + '"></div>');
+                }
+                $('#team-members').show();
+            } else {
+                $('#team-members').empty().hide();
+            }
+
+            var entryFee = getEntryFee($('#event').val());
+            $('#entry-fee').text('Entry Fee: ' + entryFee + ' INR').show();
+        });
+
+        function getEntryFee(eventId) {
+            // Define entry fees for each event
+            var entryFees = {
+                '1': 49,
+                '2': 49,
+                '3': 200,
+                '4': 250,
+                '5': 200,
+                '6': 150,
+                '7': 50,
+                '8': 100,
+                '9': 59
+            };
+
+            return entryFees[eventId] || 0;
+        }
+
+        // Fetch a random image from Unsplash and set it as the background
+        $(document).ready(function() {
+            $.ajax({
+                url: 'https://source.unsplash.com/random/1600x900',
+                method: 'GET',
+                success: function(response) {
+                    $('body').css('background-image', 'url(' + response + ')');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching background image:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
